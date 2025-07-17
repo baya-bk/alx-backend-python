@@ -33,3 +33,9 @@ Expected Output
 {'user_id': '...', 'name': '...', 'email': '...', 'age': 67}
 {'user_id': '...', 'name': '...', 'email': '...', 'age': 119}
 ...
+
+Task-4
+Running
+python 4-stream_ages.py
+Expected result
+Average age of users: <calculated_average>
