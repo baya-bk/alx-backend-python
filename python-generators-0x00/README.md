@@ -22,3 +22,14 @@ Output
 {'user_id': '...', 'name': '...', 'email': '...', 'age': 67}
 {'user_id': '...', 'name': '...', 'email': '...', 'age': 119}
 ...
+`
+
+Task-3
+
+Running
+./3-main.py | head -n 7
+
+Expected Output
+{'user_id': '...', 'name': '...', 'email': '...', 'age': 67}
+{'user_id': '...', 'name': '...', 'email': '...', 'age': 119}
+...
