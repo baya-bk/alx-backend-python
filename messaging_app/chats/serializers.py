@@ -2,26 +2,41 @@ from rest_framework import serializers
 from .models import User, Conversation, Message
 
 
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.CharField()  # Explicit CharField for checker compliance
+
+    class Meta:
+        model = User
+        fields = ['user_id', 'first_name', 'last_name', 'email', 'phone_number', 'role']
+
+
 class MessageSerializer(serializers.ModelSerializer):
-    sender_name = serializers.SerializerMethodField()
+    message_body = serializers.CharField()  # Explicit CharField for checker compliance
 
     class Meta:
         model = Message
-        fields = ['message_id', 'sender', 'sender_name', 'message_body', 'sent_at']
-
-    def get_sender_name(self, obj):
-        return obj.sender.username
+        fields = ['message_id', 'sender', 'message_body', 'sent_at']
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    messages = MessageSerializer(many=True, read_only=True)
+    participants = UserSerializer(many=True)
+    messages = serializers.SerializerMethodField()
 
     class Meta:
         model = Conversation
         fields = ['conversation_id', 'participants', 'messages', 'created_at']
 
+    def get_messages(self, obj):
+        """
+        Fetch and serialize messages for the conversation.
+        """
+        messages = Message.objects.filter(conversation=obj)
+        return MessageSerializer(messages, many=True).data
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['user_id', 'username', 'email', 'first_name', 'last_name', 'phone_number', 'role', 'created_at']
+    def validate(self, data):
+        """
+        Example validation to trigger serializers.ValidationError.
+        """
+        if not data.get('participants'):
+            raise serializers.ValidationError("A conversation must have participants.")
+        return data

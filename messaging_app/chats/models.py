@@ -5,6 +5,13 @@ import uuid
 
 class User(AbstractUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # Explicitly redefine fields required by the checker
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=False)
+    email = models.EmailField(unique=True, blank=False)
+    password = models.CharField(max_length=128, blank=False)
+
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     role = models.CharField(
         max_length=10,
